@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Courses | EAMU Admin</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="a_dashboard.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <img src="../images/images.jpg" alt="Logo" class="sidebar-logo" />
+          <h3>EAMU Admin</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="a_dashboard.html" class="nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="a_users.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Manage Users</span>
+          </a>
+          <a href="a_courses.html" class="nav-item active">
+            <i class="fas fa-book"></i>
+            <span>Manage Courses</span>
+          </a>
+          <a href="a_lessons.html" class="nav-item">
+            <i class="fas fa-video"></i>
+            <span>Create Lessons</span>
+          </a>
+          <a href="a_tasks.html" class="nav-item">
+            <i class="fas fa-tasks"></i>
+            <span>Manage Tasks</span>
+          </a>
+          <a href="a_settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="admin-profile">
+            <i class="fas fa-user-circle"></i>
+            <div>
+              <p id="adminName">Loading...</p>
+              <small>Administrator</small>
+            </div>
+          </div>
+          <a href="../login/index.html" id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <h1>Manage Courses</h1>
+          <div class="top-bar-right">
+            <a href="a_notifications.html" class="notification-icon">
+              <i class="fas fa-bell"></i>
+              <span class="badge" id="notifBadge">0</span>
+            </a>
+            <div class="date-display">
+              <i class="fas fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <!-- Page Header -->
+          <div class="page-header">
+            <h2>All Courses</h2>
+            <button
+              class="btn btn-primary"
+              onclick="openModal('addCourseModal')"
+            >
+              <i class="fas fa-plus"></i> Create New Course
+            </button>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="search-bar">
+            <input
+              type="text"
+              id="searchCourses"
+              placeholder="Search courses by title or instructor..."
+            />
+            <i class="fas fa-search"></i>
+          </div>
+
+          <!-- Courses Grid -->
+          <div class="cards-grid" id="coursesGrid">
+            <div class="empty-state">
+              <i class="fas fa-book"></i>
+              <h3>No Courses Yet</h3>
+              <p>Click the button above to create your first course.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div id="addCourseModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create New Course</h3>
+          <button class="close-modal" onclick="closeModal('addCourseModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addCourseForm">
+            <div class="form-group">
+              <label>Course Title</label>
+              <input type="text" class="form-control" name="title" required />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                class="form-control"
+                name="description"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Instructor</label>
+              <select class="form-control" name="instructorId" required>
+                <option value="">Select Instructor</option>
+                <!-- Will be populated from database -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Course Image URL</label>
+              <input
+                type="url"
+                class="form-control"
+                name="image"
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select class="form-control" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('addCourseModal')"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="saveCourse()">
+            Save Course
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Course Modal -->
+    <div id="editCourseModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Edit Course</h3>
+          <button class="close-modal" onclick="closeModal('editCourseModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editCourseForm">
+            <input type="hidden" name="courseId" id="editCourseId" />
+            <div class="form-group">
+              <label>Course Title</label>
+              <input
+                type="text"
+                class="form-control"
+                name="title"
+                id="editTitle"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                class="form-control"
+                name="description"
+                id="editDescription"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Instructor</label>
+              <select
+                class="form-control"
+                name="instructorId"
+                id="editInstructorId"
+                required
+              >
+                <option value="">Select Instructor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Course Image URL</label>
+              <input
+                type="url"
+                class="form-control"
+                name="image"
+                id="editImage"
+              />
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select
+                class="form-control"
+                name="status"
+                id="editStatus"
+                required
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('editCourseModal')"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="updateCourse()">
+            Update Course
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Course Modal -->
+    <div id="viewCourseModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Course Details</h3>
+          <button class="close-modal" onclick="closeModal('viewCourseModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body" id="courseDetails">
+          <!-- Course details will be loaded here -->
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('viewCourseModal')"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../auth_helper.js"></script>
+    <script src="a_courses.js"></script>
+      <script src="a_notif_badge.js"></script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications | EAMU Admin</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="a_dashboard.css" />
+
+    <style>
+      .notifications-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .notifications-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .notifications-header h2 {
+        color: var(--text-dark);
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .notifications-header h2 i {
+        color: var(--primary-color);
+      }
+
+      .notifications-actions {
+        display: flex;
+        gap: 15px;
+      }
+
+      .notification-filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        border-bottom: 2px solid #eef2f6;
+        padding-bottom: 15px;
+      }
+
+      .filter-btn {
+        padding: 8px 20px;
+        border: none;
+        background: none;
+        color: var(--gray);
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: "Poppins", sans-serif;
+        font-size: 0.95rem;
+        border-radius: 30px;
+      }
+
+      .filter-btn:hover {
+        color: var(--primary-color);
+        background: rgba(155, 67, 153, 0.1);
+      }
+
+      .filter-btn.active {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .notifications-list {
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* Increased gap between notification groups */
+      }
+
+      .notification-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 25px; /* Increased padding */
+        background: white;
+        border-radius: var(--border-radius);
+        border: 1px solid #eef2f6;
+        transition: var(--transition);
+        position: relative;
+        margin-bottom: 15px; /* Added margin between individual notifications */
+      }
+
+      .notification-item:last-child {
+        margin-bottom: 0; /* Remove margin from last item */
+      }
+
+      .notification-item:hover {
+        transform: translateX(5px);
+        box-shadow: var(--box-shadow);
+        border-color: var(--primary-color);
+      }
+
+      .notification-item.unread {
+        background: #f0f7ff;
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .notification-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+
+      .notification-icon.registration {
+        background: rgba(33, 150, 243, 0.1);
+        color: #2196f3;
+      }
+
+      .notification-icon.enrollment {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4caf50;
+      }
+
+      .notification-icon.submission {
+        background: rgba(255, 152, 0, 0.1);
+        color: #ff9800;
+      }
+
+      .notification-icon.completion {
+        background: rgba(155, 67, 153, 0.1);
+        color: var(--primary-color);
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-content h4 {
+        font-size: 1rem;
+        margin-bottom: 8px; /* Increased margin */
+        color: var(--text-dark);
+        font-weight: 600;
+      }
+
+      .notification-content p {
+        color: var(--gray);
+        font-size: 0.95rem; /* Slightly larger */
+        margin-bottom: 12px; /* Increased margin */
+        line-height: 1.6; /* Better line height */
+      }
+
+      .notification-content p .student-name {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .notification-content p .course-name {
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .notification-content p .task-name {
+        font-weight: 600;
+        color: #ff9800;
+      }
+
+      .notification-meta {
+        display: flex;
+        align-items: center;
+        gap: 25px; /* Increased gap */
+        font-size: 0.85rem; /* Slightly larger */
+        color: var(--gray);
+      }
+
+      .notification-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .notification-meta i {
+        font-size: 0.8rem;
+      }
+
+      .notification-badge {
+        padding: 4px 12px; /* Slightly larger */
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .notification-actions {
+        display: flex;
+        gap: 10px; /* Increased gap */
+        margin-left: 15px; /* Increased margin */
+        flex-shrink: 0;
+      }
+
+      .notification-action {
+        width: 36px; /* Larger buttons */
+        height: 36px;
+        border: none;
+        border-radius: 8px;
+        background: #f8f9fa;
+        color: var(--gray);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 1rem;
+      }
+
+      .notification-action:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .notification-action.view:hover {
+        background: var(--info);
+      }
+
+      .empty-notifications {
+        text-align: center;
+        padding: 80px 40px;
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        border: 2px dashed #eef2f6;
+      }
+
+      .empty-notifications i {
+        font-size: 5rem;
+        color: var(--gray);
+        margin-bottom: 20px;
+        opacity: 0.3;
+      }
+
+      .empty-notifications h3 {
+        font-size: 1.5rem;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+      }
+
+      .empty-notifications p {
+        color: var(--gray);
+        margin-bottom: 5px;
+      }
+
+      .date-group {
+        margin-bottom: 30px; /* More space between date groups */
+      }
+
+      .date-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .date-group h5 {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 20px; /* More space after date heading */
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eef2f6;
+      }
+
+      @media (max-width: 768px) {
+        .notification-item {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 20px;
+          margin-bottom: 12px;
+        }
+
+        .notification-actions {
+          margin-left: 0;
+          width: 100%;
+          justify-content: flex-end;
+          margin-top: 10px;
+        }
+
+        .notifications-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notifications-actions {
+          width: 100%;
+        }
+
+        .notifications-actions .btn {
+          flex: 1;
+        }
+
+        .notification-meta {
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .date-group {
+          margin-bottom: 25px;
+        }
+
+        .date-group h5 {
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <img src="../images/images.jpg" alt="Logo" class="sidebar-logo" />
+          <h3>EAMU Admin</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="a_dashboard.html" class="nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="a_users.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Manage Users</span>
+          </a>
+          <a href="a_courses.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Manage Courses</span>
+          </a>
+          <a href="a_lessons.html" class="nav-item">
+            <i class="fas fa-video"></i>
+            <span>Create Lessons</span>
+          </a>
+          <a href="a_tasks.html" class="nav-item">
+            <i class="fas fa-tasks"></i>
+            <span>Manage Tasks</span>
+          </a>
+          <a href="a_settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="admin-profile">
+            <i class="fas fa-user-circle"></i>
+            <div>
+              <p id="adminName">Loading...</p>
+              <small>Administrator</small>
+            </div>
+          </div>
+          <a href="../login/index.html" id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <h1>Notifications</h1>
+          <div class="top-bar-right">
+            <a href="a_notifications.html" class="notification-icon">
+              <i class="fas fa-bell"></i>
+              <span class="badge">0</span>
+            </a>
+            <div class="date-display">
+              <i class="fas fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <div class="notifications-container">
+            <!-- Notifications Header -->
+            <div class="notifications-header">
+              <h2>
+                <i class="fas fa-bell"></i>
+                Activity Notifications
+              </h2>
+              <div class="notifications-actions">
+                <button class="btn btn-secondary" onclick="markAllAsRead()">
+                  <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="notification-filters">
+              <button
+                class="filter-btn active"
+                onclick="filterNotifications(this, 'all')"
+              >
+                All
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterNotifications(this, 'unread')"
+              >
+                Unread
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterNotifications(this, 'registration')"
+              >
+                Registrations
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterNotifications(this, 'enrollment')"
+              >
+                Enrollments
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterNotifications(this, 'submission')"
+              >
+                Submissions
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterNotifications(this, 'completion')"
+              >
+                Completions
+              </button>
+            </div>
+
+            <!-- Notifications List - Showing structure without hardcoded data -->
+            <div class="notifications-list">
+              <!-- Today's Date Group -->
+              <div class="date-group">
+                <h5>Today</h5>
+
+                <!-- Registration Notification Template -->
+                <div class="notification-item unread">
+                  <div class="notification-icon registration">
+                    <i class="fas fa-user-plus"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>New Student Registration</h4>
+                    <p>
+                      <span class="student-name">[Student Name]</span> has
+                      registered as a new student.
+                    </p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                      <span><i class="fas fa-envelope"></i> [Email]</span>
+                      <span class="notification-badge">New</span>
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_users.html"
+                      class="notification-action view"
+                      title="View User"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(1, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Enrollment Notification Template -->
+                <div class="notification-item unread">
+                  <div class="notification-icon enrollment">
+                    <i class="fas fa-book-open"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>New Course Enrollment</h4>
+                    <p>
+                      <span class="student-name">[Student Name]</span> enrolled
+                      in <span class="course-name">[Course Name]</span>
+                    </p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                      <span class="notification-badge">New</span>
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_courses.html"
+                      class="notification-action view"
+                      title="View Course"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(2, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Submission Notification Template -->
+                <div class="notification-item">
+                  <div class="notification-icon submission">
+                    <i class="fas fa-upload"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>Task Submission</h4>
+                    <p>
+                      <span class="student-name">[Student Name]</span> submitted
+                      <span class="task-name">[Task Name]</span>
+                    </p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                      <span><i class="fas fa-star"></i> Score: [Score]%</span>
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_tasks.html"
+                      class="notification-action view"
+                      title="View Submission"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(3, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Yesterday's Date Group -->
+              <div class="date-group">
+                <h5>Yesterday</h5>
+
+                <!-- Completion Notification Template -->
+                <div class="notification-item">
+                  <div class="notification-icon completion">
+                    <i class="fas fa-graduation-cap"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>Course Completed</h4>
+                    <p>
+                      <span class="student-name">[Student Name]</span> completed
+                      <span class="course-name">[Course Name]</span>
+                    </p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                      <span
+                        ><i class="fas fa-trophy"></i> Certificate Issued</span
+                      >
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_courses.html"
+                      class="notification-action view"
+                      title="View Certificate"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(4, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Bulk Registration Template -->
+                <div class="notification-item">
+                  <div class="notification-icon registration">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>Bulk Student Registrations</h4>
+                    <p>
+                      <strong>[Number] new students</strong> registered from
+                      [Batch Name]
+                    </p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_users.html"
+                      class="notification-action view"
+                      title="View Batch"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(5, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- This Week Date Group -->
+              <div class="date-group">
+                <h5>This Week</h5>
+
+                <!-- Multiple Submissions Template -->
+                <div class="notification-item">
+                  <div class="notification-icon submission">
+                    <i class="fas fa-tasks"></i>
+                  </div>
+                  <div class="notification-content">
+                    <h4>Task Submissions Overview</h4>
+                    <p><strong>[Number] submissions</strong> pending review</p>
+                    <div class="notification-meta">
+                      <span><i class="far fa-clock"></i> [Time ago]</span>
+                      <span
+                        ><i class="fas fa-clock"></i> [Number] need
+                        grading</span
+                      >
+                    </div>
+                  </div>
+                  <div class="notification-actions">
+                    <a
+                      href="a_tasks.html"
+                      class="notification-action view"
+                      title="Review Submissions"
+                    >
+                      <i class="fas fa-check-double"></i>
+                    </a>
+                    <button
+                      class="notification-action"
+                      onclick="markAsRead(6, this)"
+                      title="Mark as Read"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simple JavaScript -->
+    <script src="../auth_helper.js"></script>
+    <script src="a_notifications.js"></script>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .page-title {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        .search-query {
+            color: var(--gray);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href = 's_notifications.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name" id="headerUserName">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-title">
+            <h1>Search Results</h1>
+            <p class="search-query" id="searchQuery"></p>
+        </div>
+
+        <section class="container">
+            <div class="cards-container" id="search-results-container">
+                <div class="loading-spinner" style="grid-column:1/-1;text-align:center;padding:3rem;">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p>Searching...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="../images/images.jpg" alt="EAMU Logo">
+                    <span>EAMU Learning Hub</span>
+                </div>
+                <p>Empowering future leaders through quality education and innovation in Cambodia.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="s_dashboard.html">Home</a></li>
+                    <li><a href="s_active_courses.html">Active Courses</a></li>
+                    <li><a href="s_completed_courses.html">Completed Courses</a></li>
+                    <li><a href="s_other_programs.html">Other Programs</a></li>
+                    <li><a href="s_about.html">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="../help_center.html">Help Center</a></li>
+                    <li><a href="../faq.html">FAQs</a></li>
+                    <li><a href="../contact_us.html">Contact Us</a></li>
+                    <li><a href="../privacy_policy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Phnom Penh, Cambodia</li>
+                    <li><i class="fas fa-phone"></i> +855 71 5555 403</li>
+                    <li><i class="fas fa-envelope"></i> support@eamu.edu</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 East Asia Management University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script>
+    (function() {
+        const API_BASE = '../lms_backend/lms_backend/api';
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
+        if (!currentUser) { window.location.href = '../login/index.html'; return; }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = (urlParams.get('q') || '').trim();
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = query;
+
+        document.getElementById('searchQuery').textContent = query
+            ? 'Showing results for "' + query + '"'
+            : 'Enter a search term';
+
+        const container = document.getElementById('search-results-container');
+
+        if (!query) {
+            container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;">' +
+                '<i class="fas fa-search" style="font-size:3rem;color:var(--gray);"></i>' +
+                '<h3>Enter a search term</h3>' +
+                '<p>Use the search bar above to find courses.</p></div>';
+            return;
+        }
+
+        async function doSearch() {
+            try {
+                const res = await fetch(API_BASE + '/courses/courses.php?action=list', { credentials: 'include' });
+                const data = await res.json();
+                if (!data.success) { container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Failed to load courses.</p>'; return; }
+
+                const q = query.toLowerCase();
+                const results = (data.data || []).filter(c =>
+                    (c.Course_Title || '').toLowerCase().includes(q) ||
+                    (c.Course_Desc  || '').toLowerCase().includes(q) ||
+                    (c.Lec_Name     || '').toLowerCase().includes(q)
+                );
+
+                if (results.length === 0) {
+                    container.innerHTML =
+                        '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem;">' +
+                        '<i class="fas fa-search" style="font-size:3rem;color:var(--gray);margin-bottom:15px;"></i>' +
+                        '<h3>No courses found</h3>' +
+                        '<p>Try different keywords or browse our programs.</p>' +
+                        '<a href="s_other_programs.html" class="btn-action btn-primary" style="display:inline-block;padding:12px 30px;text-decoration:none;margin-top:20px;">' +
+                        '<i class="fas fa-file-alt"></i> Browse All Programs</a></div>';
+                    return;
+                }
+
+                container.innerHTML = results.map(c => {
+                    const title = (c.Course_Title || '').replace(/</g, '&lt;');
+                    const desc  = (c.Course_Desc  || '').replace(/</g, '&lt;');
+                    const img   = c.Course_Image || '../images/images.jpg';
+                    return '<div class="course-card">' +
+                        '<img src="' + img + '" class="card-image" alt="' + title + '" onerror="this.src=\'../images/images.jpg\'">' +
+                        '<div class="card-content">' +
+                        '<h3>' + title + '</h3>' +
+                        '<p>' + desc.substring(0, 120) + (desc.length > 120 ? '...' : '') + '</p>' +
+                        '<div class="card-meta">' +
+                        '<span><i class="fas fa-user-tie"></i> ' + (c.Lec_Name || 'TBA') + '</span>' +
+                        '<span><i class="fas fa-book"></i> ' + (c.Lesson_Count || 0) + ' lessons</span>' +
+                        '<span><i class="fas fa-users"></i> ' + (c.Student_Count || 0) + ' students</span>' +
+                        '</div>' +
+                        '<div class="card-actions">' +
+                        '<a href="s_course_detail_op.html?id=' + c.Course_ID + '" class="btn-action btn-primary" style="text-decoration:none;">' +
+                        '<i class="fas fa-info-circle"></i> View Details</a>' +
+                        '</div></div></div>';
+                }).join('');
+
+            } catch (e) {
+                console.error('Search failed', e);
+                container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:red;">Search failed. Please try again.</p>';
+            }
+        }
+
+        doSearch();
+    })();
+    </script>
+</body>
+</html>

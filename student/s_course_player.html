@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Player | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .player-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .course-header {
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+        }
+
+        .course-header h1 {
+            font-size: 2.2rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .instructor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .instructor-info i {
+            color: var(--primary-color);
+        }
+
+        .progress-summary {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eef2f6;
+        }
+
+        .progress-summary-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-summary-item i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .progress-summary-item .label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .progress-summary-item .value {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .video-player {
+            background: #1a2634;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: white;
+        }
+
+        .video-placeholder i {
+            font-size: 5rem;
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+
+        .video-placeholder p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .video-controls {
+            padding: 25px;
+        }
+
+        .lesson-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .lesson-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .progress-section {
+            margin: 20px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: var(--gray);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #eef2f6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            width: 0%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-btn-prev {
+            background: #f8f9fa;
+            color: var(--dark-color);
+        }
+
+        .nav-btn-next {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Tasks Sidebar */
+        .tasks-sidebar {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tasks-list {
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid transparent;
+        }
+
+        .task-item.pending {
+            border-left-color: #ff9800;
+        }
+
+        .task-item.completed {
+            border-left-color: #4caf50;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-number {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            flex-wrap: wrap;
+        }
+
+        .task-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .btn-start-task {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .btn-start-task:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-start-task:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .answer-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eef2f6;
+            border-radius: 10px;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit-task {
+            width: 100%;
+            padding: 15px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-submit-task:hover {
+            background: #45a049;
+        }
+
+        .completed-task-view {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completed-task-view i {
+            font-size: 4rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .completed-task-view h4 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .user-answer {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .user-answer h5 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .answer-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eef2f6;
+        }
+
+        /* Completion Section */
+        .completion-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: var(--border-radius-lg);
+            border: 2px dashed var(--primary-color);
+        }
+
+        .complete-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .complete-btn:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .completed-message {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: #e8f5e9;
+            border-radius: var(--border-radius-lg);
+            border: 2px solid #4caf50;
+        }
+
+        .completed-message i {
+            font-size: 4rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-mark-complete {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+        .btn-mark-complete:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .lesson-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-in-progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .status-not-started {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .task-submitted { border-left-color: #28a745 !important; background: #f6fdf6 !important; }
+        .task-pending   { border-left-color: #ff9800 !important; }
+
+        @media (max-width: 1024px) {
+            .player-grid { grid-template-columns: 1fr; }
+            .tasks-sidebar { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link active"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href = 's_notifications.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name" id="headerUserName">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="player-container" id="playerContainer">
+        <p style="text-align:center;padding:60px;"><i class="fas fa-spinner fa-spin"></i> Loading course...</p>
+    </main>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-tasks"></i> <span id="taskModalTitle">Task</span></h3>
+                <button class="close-modal" onclick="closeTaskModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="taskModalBody"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="../images/images.jpg" alt="EAMU Logo">
+                    <span>EAMU Learning Hub</span>
+                </div>
+                <p>Empowering future leaders through quality education and innovation in Cambodia.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="s_dashboard.html">Home</a></li>
+                    <li><a href="s_active_courses.html">Active Courses</a></li>
+                    <li><a href="s_completed_courses.html">Completed Courses</a></li>
+                    <li><a href="s_other_programs.html">Other Programs</a></li>
+                    <li><a href="s_about.html">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Phnom Penh, Cambodia</li>
+                    <li><i class="fas fa-phone"></i> +855 71 5555 403</li>
+                    <li><i class="fas fa-envelope"></i> support@eamu.edu</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 East Asia Management University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script src="s_course_player.js"></script>
+</body>
+</html>

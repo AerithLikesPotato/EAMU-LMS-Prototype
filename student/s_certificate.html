@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+
+    <style>
+        /* ── Page shell ── */
+        .cert-page-wrapper {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 20px 60px;
+        }
+        .cert-actions {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .cert-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .cert-btn-primary {
+            background: #9b4399;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(155,67,153,0.3);
+        }
+        .cert-btn-primary:hover {
+            background: #7a2f7a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(155,67,153,0.35);
+        }
+        .cert-btn-secondary {
+            background: #f4f0fb;
+            color: #9b4399;
+            border: 1.5px solid #d5b8e8;
+        }
+        .cert-btn-secondary:hover {
+            background: #e8d8f8;
+            transform: translateY(-2px);
+        }
+
+        /* ── Certificate card ── */
+        #certificateCard {
+            background: #fff;
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.414; /* A4 landscape ratio */
+            box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Outer decorative border */
+        #certificateCard .cert-outer-border {
+            position: absolute;
+            inset: 14px;
+            border: 3px solid #9b4399;
+            pointer-events: none;
+            z-index: 2;
+        }
+        #certificateCard .cert-inner-border {
+            position: absolute;
+            inset: 20px;
+            border: 1px solid #d5a0d5;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Corner ornaments */
+        #certificateCard .corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            z-index: 3;
+        }
+        #certificateCard .corner-tl { top: 10px; left: 10px; border-top: 5px solid #9b4399; border-left: 5px solid #9b4399; }
+        #certificateCard .corner-tr { top: 10px; right: 10px; border-top: 5px solid #9b4399; border-right: 5px solid #9b4399; }
+        #certificateCard .corner-bl { bottom: 10px; left: 10px; border-bottom: 5px solid #9b4399; border-left: 5px solid #9b4399; }
+        #certificateCard .corner-br { bottom: 10px; right: 10px; border-bottom: 5px solid #9b4399; border-right: 5px solid #9b4399; }
+
+        /* Background watermark */
+        #certificateCard .cert-watermark {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+        }
+        #certificateCard .cert-watermark span {
+            font-size: 18vw;
+            font-weight: 900;
+            color: rgba(155,67,153,0.04);
+            letter-spacing: -0.02em;
+            font-family: 'Playfair Display', serif;
+            user-select: none;
+        }
+
+        /* Side accent bars */
+        #certificateCard .cert-side-left {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 10px;
+            background: linear-gradient(180deg, #9b4399, #6b1b7a, #9b4399);
+            z-index: 1;
+        }
+        #certificateCard .cert-side-right {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 10px;
+            background: linear-gradient(180deg, #9b4399, #6b1b7a, #9b4399);
+            z-index: 1;
+        }
+
+        /* Content */
+        #certificateCard .cert-content {
+            position: relative;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 30px 80px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        #certificateCard .cert-logo {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 3px solid #9b4399;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        #certificateCard .cert-org {
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            color: #9b4399;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        #certificateCard .cert-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4em;
+            color: #2d1b4e;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        #certificateCard .cert-divider {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #9b4399, transparent);
+            margin: 10px auto;
+        }
+
+        #certificateCard .cert-presented {
+            font-size: 0.78em;
+            color: #888;
+            margin-bottom: 8px;
+            letter-spacing: 0.08em;
+        }
+
+        #certificateCard .cert-student-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            color: #1a1a2e;
+            font-weight: 700;
+            margin: 4px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px dashed #c87cc8;
+            display: inline-block;
+        }
+
+        #certificateCard .cert-for-text {
+            font-size: 0.78em;
+            color: #888;
+            margin-bottom: 6px;
+            letter-spacing: 0.08em;
+        }
+
+        #certificateCard .cert-course-name {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #6b1b7a;
+            margin-bottom: 10px;
+        }
+
+        #certificateCard .cert-date {
+            font-size: 0.72em;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        #certificateCard .cert-signatures {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        #certificateCard .cert-sig {
+            text-align: center;
+        }
+
+        #certificateCard .cert-sig-line {
+            width: 130px;
+            height: 1.5px;
+            background: #333;
+            margin: 0 auto 4px;
+        }
+
+        #certificateCard .cert-sig-name {
+            font-size: 0.7em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        #certificateCard .cert-sig-role {
+            font-size: 0.62em;
+            color: #999;
+        }
+
+        #certificateCard .cert-code {
+            position: absolute;
+            bottom: 28px;
+            right: 36px;
+            font-size: 0.58em;
+            color: #bbb;
+            z-index: 5;
+        }
+
+        #certificateCard .cert-seal {
+            position: absolute;
+            bottom: 28px;
+            left: 36px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #9b4399;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            background: #fdf5ff;
+        }
+        #certificateCard .cert-seal i {
+            font-size: 1.6rem;
+            color: #9b4399;
+        }
+
+        /* ── Print styles — ONLY show the certificate card ── */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+            }
+            /* Hide absolutely everything */
+            body > * { display: none !important; }
+            /* Show only the print target */
+            #printTarget { display: block !important; }
+            #certificateCard {
+                width: 100vw !important;
+                height: 100vh !important;
+                aspect-ratio: unset !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            .cert-actions { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href = 's_notifications.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name" id="headerUserName">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="cert-page-wrapper">
+
+            <!-- Action buttons (hidden on print) -->
+            <div class="cert-actions" id="certActions">
+                <button class="cert-btn cert-btn-primary" onclick="downloadCertPDF()">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+                <a href="s_completed_courses.html" class="cert-btn cert-btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <!-- Loading state -->
+            <div id="certLoading" style="text-align:center;padding:80px;">
+                <i class="fas fa-spinner fa-spin fa-2x" style="color:#9b4399;"></i>
+                <p style="margin-top:16px;color:#888;">Loading certificate...</p>
+            </div>
+
+            <!-- The certificate card — this is all that prints/downloads -->
+            <div id="printTarget" style="display:none;">
+                <div id="certificateCard">
+                    <!-- Decorative elements -->
+                    <div class="cert-side-left"></div>
+                    <div class="cert-side-right"></div>
+                    <div class="cert-outer-border"></div>
+                    <div class="cert-inner-border"></div>
+                    <div class="corner corner-tl"></div>
+                    <div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div>
+                    <div class="corner corner-br"></div>
+                    <div class="cert-watermark"><span>EAMU</span></div>
+
+                    <!-- Main content -->
+                    <div class="cert-content">
+                        <img src="../images/images.jpg" alt="EAMU Logo" class="cert-logo">
+                        <div class="cert-org">East Asia Management University</div>
+                        <div class="cert-title">Certificate of Completion</div>
+                        <div class="cert-divider"></div>
+                        <div class="cert-presented">This certificate is proudly presented to</div>
+                        <div class="cert-student-name" id="certStudentName">—</div>
+                        <div class="cert-for-text">for successfully completing the course</div>
+                        <div class="cert-course-name" id="certCourseName">—</div>
+                        <div class="cert-date" id="certDate">—</div>
+                        <div class="cert-signatures">
+                            <div class="cert-sig">
+                                <div class="cert-sig-line"></div>
+                                <div class="cert-sig-name">Prof. Jame Chou</div>
+                                <div class="cert-sig-role">Vice Chancellor</div>
+                            </div>
+                            <div class="cert-sig">
+                                <div class="cert-sig-line"></div>
+                                <div class="cert-sig-name">Prof. Roland</div>
+                                <div class="cert-sig-role">Academic Department</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seal & Code -->
+                    <div class="cert-seal"><i class="fas fa-award"></i></div>
+                    <div class="cert-code" id="certCode">ID: —</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- html2canvas + jsPDF for real PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+
+    <script>
+    (async function() {
+        const currentUser = checkAuth();
+        if (!currentUser) return;
+
+        const params = new URLSearchParams(window.location.search);
+        const certId  = params.get('id');
+        const loading = document.getElementById('certLoading');
+        const card    = document.getElementById('printTarget');
+
+        if (!certId) {
+            loading.innerHTML = '<div style="text-align:center;padding:60px;"><h3>No certificate selected.</h3><a href="s_completed_courses.html" style="color:#9b4399;">Back to Completed Courses</a></div>';
+            return;
+        }
+
+        try {
+            const res  = await fetch(API_BASE + '/certificates/certificates.php?action=get&id=' + certId);
+            const json = await res.json();
+
+            if (!json.success || !json.data) {
+                loading.innerHTML = '<div style="text-align:center;padding:60px;"><h3>Certificate not found.</h3><a href="s_completed_courses.html" style="color:#9b4399;">Back</a></div>';
+                return;
+            }
+
+            const c = json.data;
+            const issueDate = c.Issue_Date
+                ? new Date(c.Issue_Date).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
+                : 'N/A';
+
+            document.getElementById('certStudentName').textContent = c.Stu_Name || currentUser.name || '—';
+            document.getElementById('certCourseName').textContent  = c.Course_Title || '—';
+            document.getElementById('certDate').textContent        = 'Issued on: ' + issueDate;
+            document.getElementById('certCode').textContent        = 'Certificate ID: ' + (c.Cert_Code || '—');
+
+            // Show certificate, hide loading
+            loading.style.display = 'none';
+            card.style.display    = 'block';
+
+        } catch (err) {
+            console.error(err);
+            loading.innerHTML = '<div style="text-align:center;padding:60px;"><h3>Error loading certificate.</h3></div>';
+        }
+    })();
+
+    // ── Download as PDF (certificate only) ──────────────────
+    async function downloadCertPDF() {
+        const btn = document.querySelector('.cert-btn-primary');
+        const origText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF…';
+        btn.disabled = true;
+
+        try {
+            const certCard = document.getElementById('certificateCard');
+            const canvas   = await html2canvas(certCard, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            const { jsPDF } = window.jspdf;
+            // A4 landscape: 297 x 210 mm
+            const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+            const pdfW = pdf.internal.pageSize.getWidth();
+            const pdfH = pdf.internal.pageSize.getHeight();
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
+
+            const studentName = document.getElementById('certStudentName').textContent.replace(/\s+/g, '_');
+            pdf.save('Certificate_' + studentName + '.pdf');
+        } catch (err) {
+            console.error('PDF generation failed:', err);
+            alert('PDF generation failed. Please try again.');
+        }
+
+        btn.innerHTML = origText;
+        btn.disabled = false;
+    }
+
+
+    </script>
+</body>
+</html>

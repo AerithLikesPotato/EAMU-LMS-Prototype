@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | EAMU Admin</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="a_dashboard.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <img src="../images/images.jpg" alt="Logo" class="sidebar-logo" />
+          <h3>EAMU Admin</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="a_dashboard.html" class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="a_users.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Manage Users</span>
+          </a>
+          <a href="a_courses.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Manage Courses</span>
+          </a>
+          <a href="a_lessons.html" class="nav-item">
+            <i class="fas fa-video"></i>
+            <span>Create Lessons</span>
+          </a>
+          <a href="a_tasks.html" class="nav-item">
+            <i class="fas fa-tasks"></i>
+            <span>Manage Tasks</span>
+          </a>
+          <a href="a_settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="admin-profile">
+            <i class="fas fa-user-circle"></i>
+            <div>
+              <p id="adminName">Loading...</p>
+              <small>Administrator</small>
+            </div>
+          </div>
+          <a href="../login/index.html" id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <h1>Dashboard</h1>
+          <div class="top-bar-right">
+            <a
+              href="a_notifications.html"
+              class="notification-icon"
+            >
+              <i class="fas fa-bell"></i>
+              <span class="badge">0</span>
+            </a>
+            <div class="date-display">
+              <i class="fas fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area" id="contentArea">
+          <!-- Dashboard Overview -->
+          <div class="dashboard-overview">
+            <!-- Stats Grid - Will be populated by PHP/JS -->
+            <div class="stats-grid" id="statsGrid">
+              <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div>
+                  <h3>0</h3>
+                  <p>Total Students</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-book"></i>
+                <div>
+                  <h3>0</h3>
+                  <p>Active Courses</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-video"></i>
+                <div>
+                  <h3>0</h3>
+                  <p>Total Lessons</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-tasks"></i>
+                <div>
+                  <h3>0</h3>
+                  <p>Total Tasks</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+              <h3>Quick Actions</h3>
+              <div class="action-buttons">
+                <a href="a_users.html" class="action-btn">
+                  <i class="fas fa-user-plus"></i> Add New User
+                </a>
+                <a href="a_courses.html" class="action-btn">
+                  <i class="fas fa-plus-circle"></i> Create Course
+                </a>
+                <a href="a_lessons.html" class="action-btn">
+                  <i class="fas fa-film"></i> Add Lesson
+                </a>
+                <a href="a_tasks.html" class="action-btn">
+                  <i class="fas fa-puzzle-piece"></i> Create Task
+                </a>
+              </div>
+            </div>
+
+            <!-- Recent Activity - Will be populated by PHP/JS -->
+            <div class="recent-activity">
+              <h3>Recent Activity</h3>
+              <div class="activity-list" id="activityList">
+                <div class="empty-state" style="padding: 30px">
+                  <i class="fas fa-clock"></i>
+                  <p>No recent activity</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../auth_helper.js"></script>
+    <script src="a_dashboard.js"></script>
+  </body>
+</html>

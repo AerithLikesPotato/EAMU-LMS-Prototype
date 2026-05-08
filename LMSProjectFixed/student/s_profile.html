@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .page-title { margin: 30px 0; text-align: center; }
+        .page-title h1 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; }
+        .page-title p { color: var(--gray); font-size: 1.1rem; }
+
+        .profile-container {
+            max-width: 700px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: var(--border-radius-lg, 12px);
+            box-shadow: var(--box-shadow, 0 2px 12px rgba(0,0,0,0.08));
+            overflow: hidden;
+        }
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-color, #9b4399), #6b2d6b);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .profile-header .avatar {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .profile-header h2 { font-size: 1.5rem; margin-bottom: 5px; }
+        .profile-header p { opacity: 0.85; }
+
+        .profile-body { padding: 30px 40px; }
+        .profile-info { margin-bottom: 25px; }
+        .profile-info label { display: block; font-weight: 500; color: #888; font-size: 0.85rem; margin-bottom: 4px; }
+        .profile-info .value { font-size: 1.05rem; color: #333; padding: 8px 0; border-bottom: 1px solid #eef2f6; }
+        .profile-info:last-child .value { border-bottom: none; }
+
+        .form-control {
+            width: 100%; padding: 10px 14px; border: 1px solid #ddd;
+            border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-color, #9b4399); }
+        .btn { padding: 10px 24px; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; }
+        .btn-primary { background: var(--primary-color, #9b4399); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href='s_notifications.html'" style="cursor:pointer;" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-title">
+            <h1>My Profile</h1>
+            <p>View and manage your personal information</p>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="avatar"><i class="fas fa-user"></i></div>
+                <h2 id="profileName">Loading...</h2>
+                <p id="profileEmail">Loading...</p>
+            </div>
+            <div class="profile-body">
+                <div class="profile-info">
+                    <label>Full Name</label>
+                    <div class="value" id="profileFullName">—</div>
+                </div>
+                <div class="profile-info">
+                    <label>Email Address</label>
+                    <div class="value" id="profileEmailInfo">—</div>
+                </div>
+                <div class="profile-info">
+                    <label>Student ID</label>
+                    <div class="value" id="profileStudentId">—</div>
+                </div>
+                <div class="profile-info">
+                    <label>Phone Number</label>
+                    <div class="value" id="profilePhone">—</div>
+                </div>
+                <div class="profile-info">
+                    <label>Member Since</label>
+                    <div class="value" id="profileJoined">—</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align:center;padding:30px;color:#888;font-size:0.9rem;">
+        <p>&copy; 2025 East Asia Management University. All rights reserved.</p>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script>
+        (function() {
+            const user = JSON.parse(sessionStorage.getItem('currentUser')) || JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) return;
+
+            document.getElementById('profileName').textContent = user.name || 'Student';
+            document.getElementById('profileEmail').textContent = user.email || '';
+            document.getElementById('profileFullName').textContent = user.name || '—';
+            document.getElementById('profileEmailInfo').textContent = user.email || '—';
+            document.getElementById('profileStudentId').textContent = user.student_id || user.id || '—';
+            document.getElementById('profilePhone').textContent = user.phone || '—';
+            document.getElementById('profileJoined').textContent = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
+        })();
+    </script>
+</body>
+</html>

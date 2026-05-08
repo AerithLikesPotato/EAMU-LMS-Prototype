@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Lessons | EAMU Admin</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="a_dashboard.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <img src="../images/images.jpg" alt="Logo" class="sidebar-logo" />
+          <h3>EAMU Admin</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="a_dashboard.html" class="nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="a_users.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Manage Users</span>
+          </a>
+          <a href="a_courses.html" class="nav-item">
+            <i class="fas fa-book"></i>
+            <span>Manage Courses</span>
+          </a>
+          <a href="a_lessons.html" class="nav-item active">
+            <i class="fas fa-video"></i>
+            <span>Create Lessons</span>
+          </a>
+          <a href="a_tasks.html" class="nav-item">
+            <i class="fas fa-tasks"></i>
+            <span>Manage Tasks</span>
+          </a>
+          <a href="a_settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="admin-profile">
+            <i class="fas fa-user-circle"></i>
+            <div>
+              <p id="adminName">Loading...</p>
+              <small>Administrator</small>
+            </div>
+          </div>
+          <a href="../login/index.html" id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <h1>Manage Lessons</h1>
+          <div class="top-bar-right">
+            <a href="a_notifications.html" class="notification-icon">
+              <i class="fas fa-bell"></i>
+              <span class="badge">0</span>
+            </a>
+            <div class="date-display">
+              <i class="fas fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <!-- Course Selection -->
+          <div class="page-header">
+            <h2>Lessons</h2>
+            <div style="display: flex; gap: 15px">
+              <select
+                class="form-control"
+                id="courseSelect"
+                style="width: 250px"
+                onchange="loadLessons()"
+              >
+                <option value="">All Courses</option>
+                <!-- Will be populated from database -->
+              </select>
+              <button
+                class="btn btn-primary"
+                onclick="openModal('addLessonModal')"
+              >
+                <i class="fas fa-plus"></i> Add New Lesson
+              </button>
+            </div>
+          </div>
+
+          <!-- Lessons Grid -->
+          <div class="cards-grid" id="lessonsGrid">
+            <div class="empty-state">
+              <i class="fas fa-video"></i>
+              <h3>No Lessons Yet</h3>
+              <p>Select a course and click the button above to add lessons.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Lesson Modal -->
+    <div id="addLessonModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Lesson</h3>
+          <button class="close-modal" onclick="closeModal('addLessonModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addLessonForm">
+            <div class="form-group">
+              <label>Course</label>
+              <select
+                class="form-control"
+                name="courseId"
+                id="lessonCourseId"
+                required
+              >
+                <option value="">Select Course</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Lesson Title</label>
+              <input type="text" class="form-control" name="title" required />
+            </div>
+            <div class="form-group">
+              <label>YouTube Video URL</label>
+              <input
+                type="url"
+                class="form-control"
+                name="videoUrl"
+                placeholder="https://www.youtube.com/watch?v=..."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Duration (minutes:seconds)</label>
+              <input
+                type="text"
+                class="form-control"
+                name="duration"
+                placeholder="15:30"
+              />
+            </div>
+            <div class="form-group">
+              <label>Lesson Order</label>
+              <input
+                type="number"
+                class="form-control"
+                name="order"
+                min="1"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('addLessonModal')"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="saveLesson()">
+            Save Lesson
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Lesson Modal -->
+    <div id="editLessonModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Edit Lesson</h3>
+          <button class="close-modal" onclick="closeModal('editLessonModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editLessonForm">
+            <input type="hidden" name="lessonId" id="editLessonId" />
+            <div class="form-group">
+              <label>Lesson Title</label>
+              <input
+                type="text"
+                class="form-control"
+                name="title"
+                id="editTitle"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>YouTube Video URL</label>
+              <input
+                type="url"
+                class="form-control"
+                name="videoUrl"
+                id="editVideoUrl"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Duration (minutes:seconds)</label>
+              <input
+                type="text"
+                class="form-control"
+                name="duration"
+                id="editDuration"
+              />
+            </div>
+            <div class="form-group">
+              <label>Lesson Order</label>
+              <input
+                type="number"
+                class="form-control"
+                name="order"
+                id="editOrder"
+                min="1"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('editLessonModal')"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="updateLesson()">
+            Update Lesson
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../auth_helper.js"></script>
+    <script src="a_lessons.js"></script>
+    <script src="../auth_helper.js"></script>
+    <script src="a_notifications.js"></script>
+  </body>
+</html>

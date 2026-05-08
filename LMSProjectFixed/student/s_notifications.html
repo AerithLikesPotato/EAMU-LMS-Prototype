@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .page-title {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .notifications-header h2 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notifications-header h2 i {
+            color: var(--primary-color);
+        }
+
+        .notifications-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            padding: 8px 16px;
+            border: 1px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .notifications-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px 30px;
+            border-bottom: 1px solid #eef2f6;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+
+        /* Unread Notification Style */
+        .notification-item.unread {
+            background: rgba(155, 67, 153, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .notification-item.unread .notification-title {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        /* Read Notification Style */
+        .notification-item.read {
+            background: white;
+            border-left: 4px solid transparent;
+            opacity: 0.85;
+        }
+
+        .notification-item.read .notification-title {
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .notification-item.read .notification-message {
+            color: #999;
+        }
+
+        /* Tick Mark Indicators */
+        .tick-indicator {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            font-size: 1.2rem;
+        }
+
+        .tick-indicator .tick-unread {
+            background: #ff9800;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(255, 152, 0, 0.3);
+        }
+
+        .tick-indicator .tick-read {
+            background: #4CAF50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+        }
+
+        .tick-indicator .tick-read i {
+            font-size: 0.9rem;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(155, 67, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .notification-title .badge {
+            background: var(--primary-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .notification-message {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .notification-time {
+            color: #aaa;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .notification-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .notification-actions button:hover {
+            background: rgba(155, 67, 153, 0.1);
+            color: var(--primary-color);
+        }
+
+        .notification-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--gray);
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .loading-spinner i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href = 's_notifications.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name" id="headerUserName">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-title">
+            <h1>Notifications</h1>
+            <p>Stay updated with your learning journey</p>
+        </div>
+
+        <section class="container">
+            <div class="notifications-container">
+                <div class="notifications-header">
+                    <h2><i class="fas fa-bell"></i> All Notifications</h2>
+                    <div class="notifications-actions">
+                        <button class="btn-outline" id="markAllReadBtn"><i class="fas fa-check-double"></i> Mark all read</button>
+                        <button class="btn-outline" id="clearAllBtn"><i class="fas fa-trash-alt"></i> Clear all</button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Notification List -->
+                <ul class="notifications-list" id="notificationsList">
+                    <li class="notification-item" style="text-align:center;padding:2rem;">
+                        <i class="fas fa-spinner fa-spin"></i> Loading notifications...
+                    </li>
+                </ul>
+
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <i class="fas fa-bell-slash"></i>
+                    <h3>No notifications</h3>
+                    <p>You're all caught up!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="../images/images.jpg" alt="EAMU Logo">
+                    <span>EAMU Learning Hub</span>
+                </div>
+                <p>Empowering future leaders through quality education and innovation in Cambodia.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="s_dashboard.html">Home</a></li>
+                    <li><a href="s_active_courses.html">Active Courses</a></li>
+                    <li><a href="s_completed_courses.html">Completed Courses</a></li>
+                    <li><a href="s_other_programs.html">Other Programs</a></li>
+                    <li><a href="s_about.html">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="../help_center.html">Help Center</a></li>
+                    <li><a href="../faq.html">FAQs</a></li>
+                    <li><a href="../contact_us.html">Contact Us</a></li>
+                    <li><a href="../privacy_policy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Phnom Penh, Cambodia</li>
+                    <li><i class="fas fa-phone"></i> +855 71 5555 403</li>
+                    <li><i class="fas fa-envelope"></i> support@eamu.edu</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 East Asia Management University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script>
+    (function() {
+        const API_BASE = '../lms_backend/lms_backend/api';
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
+        if (!currentUser) { window.location.href = '../login/index.html'; return; }
+
+        const listEl   = document.getElementById('notificationsList');
+        const emptyEl  = document.getElementById('emptyState');
+        let notifications = [];
+
+        /* ─── icon map by notification type ─── */
+        function iconForType(type) {
+            const map = {
+                info:    'fas fa-info-circle',
+                success: 'fas fa-check-circle',
+                warning: 'fas fa-exclamation-triangle',
+                error:   'fas fa-times-circle',
+                enrollment: 'fas fa-user-plus',
+                course:  'fas fa-book',
+                task:    'fas fa-tasks'
+            };
+            return map[type] || 'fas fa-bell';
+        }
+
+        /* ─── relative time helper ─── */
+        function timeAgo(dateStr) {
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'Just now';
+            if (mins < 60) return mins + ' minute' + (mins > 1 ? 's' : '') + ' ago';
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return hrs + ' hour' + (hrs > 1 ? 's' : '') + ' ago';
+            const days = Math.floor(hrs / 24);
+            if (days < 30) return days + ' day' + (days > 1 ? 's' : '') + ' ago';
+            return new Date(dateStr).toLocaleDateString();
+        }
+
+        /* ─── render list ─── */
+        function renderNotifications() {
+            if (!notifications.length) {
+                listEl.style.display = 'none';
+                emptyEl.style.display = 'block';
+                return;
+            }
+            listEl.style.display = '';
+            emptyEl.style.display = 'none';
+
+            let unreadIdx = 0;
+            listEl.innerHTML = notifications.map(n => {
+                const isRead = Number(n.Is_Read) === 1;
+                const readClass = isRead ? 'read' : 'unread';
+                const tickHtml = isRead
+                    ? '<div class="tick-read"><i class="fas fa-check"></i></div>'
+                    : '<div class="tick-unread">' + (++unreadIdx) + '</div>';
+                const badgeHtml = isRead ? '' : ' <span class="badge">New</span>';
+                const title = (n.Notif_Title || '').replace(/</g, '&lt;');
+                const desc  = (n.Notif_Desc  || '').replace(/</g, '&lt;');
+
+                return '<li class="notification-item ' + readClass + '" data-id="' + n.Notif_ID + '">'
+                    + '<div class="tick-indicator">' + tickHtml + '</div>'
+                    + '<div class="notification-icon"><i class="' + iconForType(n.Notif_Type) + '"></i></div>'
+                    + '<div class="notification-content">'
+                    +   '<div class="notification-title"><span>' + title + '</span>' + badgeHtml + '</div>'
+                    +   '<div class="notification-message">' + desc + '</div>'
+                    +   '<div class="notification-time"><i class="far fa-clock"></i> ' + timeAgo(n.Created_At) + '</div>'
+                    +   '<div class="notification-actions">'
+                    +     '<button class="mark-read" ' + (isRead ? 'disabled' : '') + ' onclick="markRead(' + n.Notif_ID + ', event)">'
+                    +       '<i class="fas fa-check"></i> Mark as read</button>'
+                    +     '<button class="delete-notification" onclick="deleteNotif(' + n.Notif_ID + ', event)">'
+                    +       '<i class="fas fa-trash"></i> Delete</button>'
+                    +   '</div>'
+                    + '</div></li>';
+            }).join('');
+        }
+
+        /* ─── load from backend ─── */
+        async function loadNotifications() {
+            try {
+                const res = await fetch(API_BASE + '/notifications/notifications.php?action=list&recipient_id=' + currentUser.id + '&role=student', { credentials: 'include' });
+                const data = await res.json();
+                notifications = data.success ? (data.data || []) : [];
+            } catch (e) {
+                console.error('Failed to load notifications', e);
+                notifications = [];
+            }
+            renderNotifications();
+        }
+
+        /* ─── mark single as read ─── */
+        window.markRead = async function(id, e) {
+            e.stopPropagation();
+            try {
+                await fetch(API_BASE + '/notifications/notifications.php?action=mark_read', {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const n = notifications.find(x => x.Notif_ID == id);
+                if (n) n.Is_Read = 1;
+                renderNotifications();
+                if (window.refreshNotifBadge) window.refreshNotifBadge();
+            } catch (e) { console.error(e); }
+        };
+
+        /* ─── delete single ─── */
+        window.deleteNotif = async function(id, e) {
+            e.stopPropagation();
+            if (!confirm('Delete this notification?')) return;
+            try {
+                await fetch(API_BASE + '/notifications/notifications.php?action=delete', {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                notifications = notifications.filter(x => x.Notif_ID != id);
+                renderNotifications();
+                if (window.refreshNotifBadge) window.refreshNotifBadge();
+            } catch (e) { console.error(e); }
+        };
+
+        /* ─── mark all read ─── */
+        document.getElementById('markAllReadBtn')?.addEventListener('click', async function() {
+            try {
+                await fetch(API_BASE + '/notifications/notifications.php?action=mark_all_read', {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient_id: currentUser.id, role: 'student' })
+                });
+                notifications.forEach(n => n.Is_Read = 1);
+                renderNotifications();
+                if (window.refreshNotifBadge) window.refreshNotifBadge();
+            } catch (e) { console.error(e); }
+        });
+
+        /* ─── clear all ─── */
+        document.getElementById('clearAllBtn')?.addEventListener('click', async function() {
+            if (!confirm('Delete all notifications?')) return;
+            try {
+                await fetch(API_BASE + '/notifications/notifications.php?action=clear_all', {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient_id: currentUser.id, role: 'student' })
+                });
+                notifications = [];
+                renderNotifications();
+                if (window.refreshNotifBadge) window.refreshNotifBadge();
+            } catch (e) { console.error(e); }
+        });
+
+        loadNotifications();
+    })();
+    </script>
+</body>
+</html>

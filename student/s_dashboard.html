@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | EAMU Learning Hub</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="s_dashboard.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="top-bar">
+        <div class="nav-left">
+          <img src="../images/images.jpg" alt="Logo" class="logo" />
+        </div>
+        <nav class="nav-center">
+          <a href="s_dashboard.html" class="nav-link active"
+            ><i class="fas fa-home"></i> Home</a
+          >
+          <a href="s_active_courses.html" class="nav-link"
+            ><i class="fas fa-book-open"></i> Active Course</a
+          >
+          <a href="s_completed_courses.html" class="nav-link"
+            ><i class="fas fa-clipboard-check"></i> Completed Course</a
+          >
+          <a href="s_other_programs.html" class="nav-link"
+            ><i class="fas fa-file-alt"></i> Other Program</a
+          >
+          <a href="s_about.html" class="nav-link"
+            ><i class="fas fa-users"></i> About Us</a
+          >
+        </nav>
+        <div class="nav-right">
+          <div class="search-container">
+            <input
+              type="text"
+              placeholder="Search courses..."
+              class="search-input"
+              id="searchInput"
+            />
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          <!-- Fixed notification icon with cursor pointer -->
+          <div
+            class="notification-icon"
+            onclick="window.location.href='s_notifications.html'"
+            style="cursor: pointer;"
+            title="Notifications"
+          >
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notifBadge">0</span>
+          </div>
+          <div class="user-profile" onclick="toggleUserMenu(event)">
+            <i class="fas fa-user-circle"></i>
+            <span class="user-name">Username</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <!-- User Dropdown Menu -->
+          <div class="user-dropdown" id="userDropdown">
+            <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+            <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+            <a href="s_active_courses.html"
+              ><i class="fas fa-book"></i> My Courses</a
+            >
+            <div class="dropdown-divider"></div>
+            <a href="#" id="logoutBtn"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <img
+          src="../images/DSC_5718-Enhanced-NR-1536x1024.jpg"
+          alt="Students"
+          class="welcome-bg"
+        />
+        <div class="welcome-text">
+          <h1>Welcome back, <span>Student</span>!</h1>
+          <p>
+            East Asia Management University (EAMU) - Empowering future leaders
+            through quality education and innovation in Phnom Penh, Cambodia.
+          </p>
+        </div>
+      </section>
+
+      <!-- Quick Action -->
+      <div class="quick-action-container">
+        <div class="quick-action-label">
+          <i class="fas fa-bolt"></i>
+          <span>Quick Action</span>
+        </div>
+      </div>
+
+      <!-- Dashboard Buttons -->
+      <section class="dashboard-buttons">
+        <a href="s_dashboard.html" class="btn"
+          ><i class="fas fa-home"></i><span>Home</span></a
+        >
+        <a href="s_active_courses.html" class="btn"
+          ><i class="fas fa-book-open"></i><span>Active Course</span></a
+        >
+        <a href="s_completed_courses.html" class="btn"
+          ><i class="fas fa-clipboard-check"></i
+          ><span>Completed Course</span></a
+        >
+        <a href="s_other_programs.html" class="btn"
+          ><i class="fas fa-file-alt"></i><span>Other Program</span></a
+        >
+        <a href="s_about.html" class="btn"
+          ><i class="fas fa-users"></i><span>About Us</span></a
+        >
+      </section>
+
+      <!-- Active Courses Section -->
+      <section class="container">
+        <div class="section-header">
+          <h2><i class="fas fa-book-open"></i> Active Courses</h2>
+          <a href="s_active_courses.html" class="view-all-link"
+            >View All <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+
+        <div class="cards-container" id="active-courses-container">
+          <!-- Dynamically loaded from backend -->
+        </div>
+      </section>
+
+      <!-- Other Programs Section -->
+      <section class="container">
+        <div class="section-header">
+          <h2><i class="fas fa-file-alt"></i> Other Programs</h2>
+          <a href="s_other_programs.html" class="view-all-link"
+            >View All <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+
+        <div class="cards-container" id="other-programs-container">
+          <!-- Dynamically loaded from backend -->
+        </div>
+      </section>
+
+      <!-- Completed Courses Section -->
+      <section class="container">
+        <div class="section-header">
+          <h2><i class="fas fa-clipboard-check"></i> Completed Courses</h2>
+          <a href="s_completed_courses.html" class="view-all-link"
+            >View All <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+
+        <div class="completed-courses-list" id="completed-courses-container">
+          <!-- Dynamically loaded from backend -->
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="container about-section">
+        <div class="section-header">
+          <h2><i class="fas fa-users"></i> About EAMU</h2>
+        </div>
+        <div class="about-content">
+          <div class="about-grid">
+            <div class="about-text">
+              <h3>East Asia Management University</h3>
+              <p>
+                Founded in 2019, EAMU has been at the forefront of higher
+                education in Cambodia, providing world-class education and
+                fostering innovation. Our Learning Hub platform brings quality
+                education to students worldwide.
+              </p>
+              <div class="about-stats">
+                <div class="stat">
+                  <span class="stat-number">7+</span
+                  ><span class="stat-label">Years</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">499+</span
+                  ><span class="stat-label">Students</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">33</span
+                  ><span class="stat-label">Courses</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-number">98%</span
+                  ><span class="stat-label">Satisfaction</span>
+                </div>
+              </div>
+            </div>
+            <div class="about-image">
+              <img
+                src="../images/a49c72ee7e776445507a029c202295edeb61a179.jpg"
+                alt="EAMU Campus"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <img src="../images/images.jpg" alt="EAMU Logo" />
+            <span>EAMU Learning Hub</span>
+          </div>
+          <p>
+            Empowering future leaders through quality education and innovation
+            in Cambodia.
+          </p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="s_dashboard.html">Home</a></li>
+            <li><a href="s_active_courses.html">Active Courses</a></li>
+            <li><a href="s_completed_courses.html">Completed Courses</a></li>
+            <li><a href="s_other_programs.html">Other Programs</a></li>
+            <li><a href="s_about.html">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <ul>
+            <li><i class="fas fa-map-marker-alt"></i> Phnom Penh, Cambodia</li>
+            <li><i class="fas fa-phone"></i> +855 71 5555 403</li>
+            <li><i class="fas fa-envelope"></i> support@eamu.edu</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 East Asia Management University. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+  </body>
+</html>

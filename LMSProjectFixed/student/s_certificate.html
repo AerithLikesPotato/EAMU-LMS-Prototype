@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .certificate-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px 20px;
+        }
+        .certificate-wrapper {
+            background: linear-gradient(135deg, #fff, #f9f9f9);
+            border: 20px solid var(--primary-color);
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+        .certificate-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid var(--primary-light);
+            pointer-events: none;
+        }
+        .certificate-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .certificate-title {
+            font-size: 3rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .certificate-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+        .certificate-student {
+            font-size: 2rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            margin: 30px 0;
+            border-bottom: 2px dashed var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .certificate-course {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin: 20px 0;
+        }
+        .certificate-date {
+            color: var(--gray);
+            margin: 30px 0;
+            font-size: 1.1rem;
+        }
+        .certificate-id {
+            color: #999;
+            font-size: 0.9rem;
+            margin: 20px 0;
+        }
+        .certificate-signature {
+            display: flex;
+            justify-content: space-around;
+            margin: 50px 0 20px;
+        }
+        .signature {
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            height: 2px;
+            background: var(--dark-color);
+            margin: 10px 0;
+        }
+        .btn-download {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-download:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(155, 67, 153, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href = 's_notifications.html'">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name" id="headerUserName">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="certificate-container" id="certificateContainer">
+            <p style="text-align:center;padding:60px;"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading certificate...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="../images/images.jpg" alt="EAMU Logo">
+                    <span>EAMU Learning Hub</span>
+                </div>
+                <p>Empowering future leaders through quality education and innovation in Cambodia.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="s_dashboard.html">Home</a></li>
+                    <li><a href="s_active_courses.html">Active Courses</a></li>
+                    <li><a href="s_completed_courses.html">Completed Courses</a></li>
+                    <li><a href="s_other_programs.html">Other Programs</a></li>
+                    <li><a href="s_about.html">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Phnom Penh, Cambodia</li>
+                    <li><i class="fas fa-phone"></i> +855 71 5555 403</li>
+                    <li><i class="fas fa-envelope"></i> support@eamu.edu</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 East Asia Management University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script>
+    (async function() {
+        const currentUser = checkAuth();
+        if (!currentUser) return;
+
+        const params = new URLSearchParams(window.location.search);
+        const certId = params.get('id');
+        const container = document.getElementById('certificateContainer');
+
+        if (!certId) {
+            container.innerHTML = '<div style="text-align:center;padding:60px;"><h3>No certificate selected</h3><a href="s_completed_courses.html">Back to Completed Courses</a></div>';
+            return;
+        }
+
+        try {
+            const res = await fetch(API_BASE + '/certificates/certificates.php?action=get&id=' + certId);
+            const json = await res.json();
+
+            if (!json.success || !json.data) {
+                container.innerHTML = '<div style="text-align:center;padding:60px;"><h3>Certificate not found</h3><a href="s_completed_courses.html">Back to Completed Courses</a></div>';
+                return;
+            }
+
+            const c = json.data;
+            const issueDate = c.Issue_Date ? new Date(c.Issue_Date).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : 'N/A';
+
+            container.innerHTML =
+                '<div class="certificate-wrapper">' +
+                    '<img src="../images/images.jpg" alt="EAMU Logo" class="certificate-logo">' +
+                    '<h1 class="certificate-title">Certificate of Completion</h1>' +
+                    '<p class="certificate-subtitle">This is proudly presented to</p>' +
+                    '<div class="certificate-student">' + (c.Stu_Name || currentUser.name) + '</div>' +
+                    '<p class="certificate-subtitle">for successfully completing</p>' +
+                    '<div class="certificate-course">' + (c.Course_Title || 'Course') + '</div>' +
+                    '<div class="certificate-date">Completed on: ' + issueDate + '</div>' +
+                    '<div class="certificate-id">Certificate ID: ' + (c.Cert_Code || 'N/A') + '</div>' +
+                    '<div class="certificate-signature">' +
+                        '<div class="signature"><div class="signature-line"></div><p>Prof. Jame Chou</p><p>Vice Chancellor</p></div>' +
+                        '<div class="signature"><div class="signature-line"></div><p>Prof. Roland</p><p>Academic Department</p></div>' +
+                    '</div>' +
+                    '<a href="#" class="btn-download" onclick="window.print(); return false;"><i class="fas fa-download"></i> Print Certificate</a>' +
+                '</div>';
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = '<div style="text-align:center;padding:60px;"><h3>Error loading certificate</h3></div>';
+        }
+    })();
+    </script>
+</body>
+</html>

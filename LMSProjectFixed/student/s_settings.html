@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | EAMU Learning Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="s_dashboard.css">
+    <style>
+        .page-title {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .page-title p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        .settings-container {
+            max-width: 700px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: var(--border-radius-lg, 12px);
+            box-shadow: var(--box-shadow, 0 2px 12px rgba(0,0,0,0.08));
+            padding: 40px;
+        }
+        .settings-section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .settings-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-color, #333);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #555;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color, #9b4399);
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--primary-color, #9b4399);
+            color: white;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="nav-left">
+                <img src="../images/images.jpg" alt="Logo" class="logo">
+            </div>
+            <nav class="nav-center">
+                <a href="s_dashboard.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="s_active_courses.html" class="nav-link"><i class="fas fa-book-open"></i> Active Course</a>
+                <a href="s_completed_courses.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Completed Course</a>
+                <a href="s_other_programs.html" class="nav-link"><i class="fas fa-file-alt"></i> Other Program</a>
+                <a href="s_about.html" class="nav-link"><i class="fas fa-users"></i> About Us</a>
+            </nav>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search courses..." class="search-input" id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="notification-icon" onclick="window.location.href='s_notifications.html'" style="cursor:pointer;" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-name">Username</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="s_profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="s_settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="s_active_courses.html"><i class="fas fa-book"></i> My Courses</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="../login/index.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-title">
+            <h1>Settings</h1>
+            <p>Manage your account preferences</p>
+        </div>
+
+        <div class="settings-container">
+            <!-- Change Password -->
+            <div class="settings-section">
+                <h3><i class="fas fa-lock" style="margin-right:10px;color:var(--primary-color,#9b4399);"></i> Change Password</h3>
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password">
+                </div>
+                <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="settings-section">
+                <h3><i class="fas fa-bell" style="margin-right:10px;color:var(--primary-color,#9b4399);"></i> Notification Preferences</h3>
+                <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+                    <label style="margin-bottom:0;">Email Notifications</label>
+                    <input type="checkbox" checked id="emailNotifications">
+                </div>
+                <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+                    <label style="margin-bottom:0;">Course Updates</label>
+                    <input type="checkbox" checked id="courseUpdates">
+                </div>
+                <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+                    <label style="margin-bottom:0;">Assignment Reminders</label>
+                    <input type="checkbox" checked id="assignmentReminders">
+                </div>
+                <button class="btn btn-primary" onclick="saveNotificationPrefs()">Save Preferences</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:30px;color:#888;font-size:0.9rem;">
+        <p>&copy; 2025 East Asia Management University. All rights reserved.</p>
+    </footer>
+
+    <script src="../auth_helper.js"></script>
+    <script src="s_notif_badge.js"></script>
+    <script src="s_dashboard.js"></script>
+    <script>
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (!current || !newPass || !confirm) { alert('Please fill in all fields.'); return; }
+            if (newPass !== confirm) { alert('New passwords do not match!'); return; }
+            if (newPass.length < 6) { alert('Password must be at least 6 characters.'); return; }
+            alert('Password updated successfully!');
+        }
+        function saveNotificationPrefs() {
+            alert('Notification preferences saved!');
+        }
+    </script>
+</body>
+</html>

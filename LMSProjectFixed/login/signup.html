@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - LearnHub LMS</title>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="signup.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-container">
+      <!-- LEFT: Signup Form -->
+      <div class="auth-card">
+        <div class="auth-header">
+          <a href="#" class="logo">
+            <img src="../images/images.jpg" class="logo-pic" />
+            <span>EAMU Learning Hub</span>
+          </a>
+          <h1>Create Account</h1>
+          <p>Sign up for a new account</p>
+        </div>
+
+        <form id="signupForm" class="auth-form">
+          <div class="form-group">
+            <label for="studentId"><i class="fas fa-id-card"></i> Student ID</label>
+            <input
+              type="number"
+              id="studentId"
+              name="studentId"
+              class="form-control"
+              placeholder="Enter your student ID"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="fullname"><i class="fas fa-user"></i> Full Name</label>
+            <input
+              type="text"
+              id="fullname"
+              name="fullname"
+              class="form-control"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
+            <div class="password-input">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                placeholder="Create password"
+                required
+              />
+              <button type="button" class="toggle-password">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword"
+              ><i class="fas fa-lock"></i> Confirm Password</label
+            >
+            <div class="password-input">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                class="form-control"
+                placeholder="Confirm password"
+                required
+              />
+              <button type="button" class="toggle-password">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </form>
+
+        <!-- Footer links under signup button -->
+        <div class="auth-footer">
+          <p>
+            Already have an account?
+            <a href="index.html">Sign In</a>
+          </p>
+          <p>
+            <a href="index.html"
+              ><i class="fas fa-arrow-left"></i> Back to Home</a
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: Info Panel -->
+      <div class="auth-side">
+        <div class="auth-side-content">
+          <h2>Join Our Learning Community</h2>
+          <p>
+            Access thousands of courses, connect with instructors, and track
+            your learning progress.
+          </p>
+          <div class="testimonial">
+            <p>"The more that you read, the more things you will know. The more that you learn, the more places you’ll go."</p>
+            <p class="author">-Mr. Sarith & Mr.Anvey</p>
+          </div>
+          <div class="benefits">
+            <div class="benefit">
+              <i class="fas fa-check-circle"></i>
+              <span>Access Thousands of Courses</span>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-check-circle"></i>
+              <span>Learn at Your Own Pace</span>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-check-circle"></i>
+              <span>Track Progress Easily</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Toggle password visibility
+      const toggleButtons = document.querySelectorAll(".toggle-password");
+      toggleButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = btn.previousElementSibling;
+          const icon = btn.querySelector('i');
+          input.type = input.type === "password" ? "text" : "password";
+          icon.className = input.type === "password" ? "fas fa-eye" : "fas fa-eye-slash";
+        });
+      });
+
+      // Signup form submission
+      document.getElementById('signupForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          const studentId = document.getElementById('studentId').value.trim();
+          const fullname  = document.getElementById('fullname').value.trim();
+          const email     = document.getElementById('email').value.trim();
+          const password  = document.getElementById('password').value;
+          const confirm   = document.getElementById('confirmPassword').value;
+
+          if (password !== confirm) {
+              alert('Passwords do not match!');
+              return;
+          }
+
+          if (password.length < 4) {
+              alert('Password must be at least 4 characters.');
+              return;
+          }
+
+          const btn = this.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing up...';
+
+          try {
+              const res = await fetch('../lms_backend/lms_backend/api/auth/auth.php?action=register', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      Stu_ID: studentId,
+                      Stu_Name: fullname,
+                      Stu_Email: email,
+                      password: password
+                  })
+              });
+
+              const data = await res.json();
+
+              if (data.success) {
+                  alert('Registration successful! Please sign in.');
+                  window.location.href = 'index.html';
+              } else {
+                  alert(data.message || 'Registration failed.');
+                  btn.disabled = false;
+                  btn.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
+              }
+          } catch (err) {
+              alert('Could not connect to server. Make sure XAMPP is running.');
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
+          }
+      });
+    </script>
+  </body>
+</html>

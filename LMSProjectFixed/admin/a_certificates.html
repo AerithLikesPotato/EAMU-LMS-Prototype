@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Certificates | EAMU Admin</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="a_dashboard.css">
+    
+    <style>
+        .certificates-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .certificates-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .certificates-header h2 {
+            color: var(--text-dark);
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .certificates-header h2 i {
+            color: var(--primary-color);
+        }
+        
+        .certificates-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .certificate-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #eef2f6;
+            padding-bottom: 15px;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border: none;
+            background: none;
+            color: var(--gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            border-radius: 30px;
+        }
+        
+        .filter-btn:hover {
+            color: var(--primary-color);
+            background: rgba(155, 67, 153, 0.1);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .search-section {
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            position: relative;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid #eef2f6;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .certificate-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border: 1px solid #eef2f6;
+            position: relative;
+        }
+        
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(155, 67, 153, 0.15);
+            border-color: var(--primary-color);
+        }
+        
+        .certificate-preview {
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .certificate-preview i {
+            font-size: 4rem;
+            opacity: 0.3;
+            position: absolute;
+        }
+        
+        .certificate-preview .preview-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .certificate-preview .preview-text h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .certificate-preview .preview-text p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .certificate-content {
+            padding: 20px;
+        }
+        
+        .certificate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .certificate-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        .certificate-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--success);
+            color: white;
+        }
+        
+        .certificate-badge.pending {
+            background: var(--warning);
+        }
+        
+        .certificate-details {
+            margin-bottom: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .detail-row i {
+            width: 20px;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .detail-row .label {
+            font-weight: 500;
+            color: var(--text-dark);
+            min-width: 80px;
+        }
+        
+        .detail-row .value {
+            color: var(--gray);
+        }
+        
+        .certificate-footer {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eef2f6;
+            padding-top: 20px;
+        }
+        
+        .certificate-footer .btn-small {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(155, 67, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .stat-info h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .empty-certificates {
+            text-align: center;
+            padding: 80px 40px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border: 2px dashed #eef2f6;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-certificates i {
+            font-size: 5rem;
+            color: var(--gray);
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-certificates h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .empty-certificates p {
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        /* Modal Styles */
+        .certificate-preview-modal {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .certificate-frame {
+            background: white;
+            border: 1px solid #eef2f6;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .certificate-frame h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .certificate-frame h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .certificate-frame .student-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 20px 0;
+            padding: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+        
+        .certificate-frame .course-name {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        .certificate-frame .date {
+            color: var(--gray);
+            margin-top: 30px;
+        }
+        
+        .certificate-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .certificates-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .certificates-actions {
+                width: 100%;
+            }
+            
+            .certificates-actions .btn {
+                flex: 1;
+            }
+            
+            .certificate-footer {
+                flex-direction: column;
+            }
+            
+            .certificate-footer .btn-small {
+                width: 100%;
+            }
+            
+            .certificate-preview-modal .certificate-frame {
+                padding: 20px;
+            }
+            
+            .certificate-frame h2 {
+                font-size: 1.5rem;
+            }
+            
+            .certificate-frame .student-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="admin-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../images/images.jpg" alt="Logo" class="sidebar-logo">
+            <h3>EAMU Admin</h3>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="a_dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="a_users.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Manage Users</span>
+            </a>
+            <a href="a_courses.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Manage Courses</span>
+            </a>
+            <a href="a_lessons.html" class="nav-item">
+                <i class="fas fa-video"></i>
+                <span>Create Lessons</span>
+            </a>
+            <a href="a_tasks.html" class="nav-item">
+                <i class="fas fa-tasks"></i>
+                <span>Manage Tasks</span>
+            </a>
+            <a href="a_certificates.html" class="nav-item active">
+                <i class="fas fa-certificate"></i>
+                <span>Certificates</span>
+            </a>
+            <a href="a_settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <i class="fas fa-user-circle"></i>
+                <div>
+                    <p id="adminName">Loading...</p>
+                    <small>Administrator</small>
+                </div>
+            </div>
+            <a href="../login/index.html" id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <h1>Manage Certificates</h1>
+            <div class="top-bar-right">
+                <a href="a_notifications.html" class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationBadge">0</span>
+                </a>
+                <div class="date-display">
+                    <i class="fas fa-calendar"></i>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="certificates-container">
+                <!-- Header -->
+                <div class="certificates-header">
+                    <h2>
+                        <i class="fas fa-certificate"></i>
+                        Student Certificates
+                    </h2>
+                    <div class="certificates-actions">
+                        <button class="btn btn-secondary" onclick="exportCertificates()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn btn-primary" onclick="generateBulkCertificates()">
+                            <i class="fas fa-layer-group"></i> Bulk Generate
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>[Total]</h4>
+                            <p>Total Issued</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>[Active]</h4>
+                            <p>Active</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>[Pending]</h4>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>[Students]</h4>
+                            <p>Certified Students</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="certificate-filters">
+                    <button class="filter-btn active" onclick="filterCertificates(this, 'all')">All</button>
+                    <button class="filter-btn" onclick="filterCertificates(this, 'active')">Active</button>
+                    <button class="filter-btn" onclick="filterCertificates(this, 'pending')">Pending</button>
+                    <button class="filter-btn" onclick="filterCertificates(this, 'expired')">Expired</button>
+                    <button class="filter-btn" onclick="filterCertificates(this, 'this-month')">This Month</button>
+                </div>
+                
+                <!-- Search Box -->
+                <div class="search-section">
+                    <div class="search-box">
+                        <input type="text" id="searchCertificates" placeholder="Search by student name, course, or ID...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <!-- Certificates Grid -->
+                <div class="certificates-grid">
+                    
+                    <!-- Certificate Card Template 1 -->
+                    <div class="certificate-card">
+                        <div class="certificate-preview">
+                            <i class="fas fa-certificate"></i>
+                            <div class="preview-text">
+                                <h4>[Course Name]</h4>
+                                <p>[Student Name]</p>
+                            </div>
+                        </div>
+                        <div class="certificate-content">
+                            <div class="certificate-header">
+                                <h3>[Certificate Title]</h3>
+                                <span class="certificate-badge">Active</span>
+                            </div>
+                            <div class="certificate-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span class="label">Student:</span>
+                                    <span class="value">[Student Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-book"></i>
+                                    <span class="label">Course:</span>
+                                    <span class="value">[Course Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span class="label">Issued:</span>
+                                    <span class="value">[Issue Date]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-trophy"></i>
+                                    <span class="label">Grade:</span>
+                                    <span class="value">[Grade]%</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span class="label">Cert #:</span>
+                                    <span class="value">[Certificate ID]</span>
+                                </div>
+                            </div>
+                            <div class="certificate-footer">
+                                <button class="btn-small" onclick="viewCertificate(1)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn-small" onclick="downloadCertificate(1)">
+                                    <i class="fas fa-download"></i> PDF
+                                </button>
+                                <button class="btn-small" onclick="emailCertificate(1)">
+                                    <i class="fas fa-envelope"></i> Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certificate Card Template 2 (Pending) -->
+                    <div class="certificate-card">
+                        <div class="certificate-preview" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+                            <i class="fas fa-clock"></i>
+                            <div class="preview-text">
+                                <h4>[Course Name]</h4>
+                                <p>[Student Name]</p>
+                            </div>
+                        </div>
+                        <div class="certificate-content">
+                            <div class="certificate-header">
+                                <h3>[Certificate Title]</h3>
+                                <span class="certificate-badge pending">Pending</span>
+                            </div>
+                            <div class="certificate-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span class="label">Student:</span>
+                                    <span class="value">[Student Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-book"></i>
+                                    <span class="label">Course:</span>
+                                    <span class="value">[Course Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span class="label">Completed:</span>
+                                    <span class="value">[Completion Date]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <span class="label">Status:</span>
+                                    <span class="value">Awaiting Approval</span>
+                                </div>
+                            </div>
+                            <div class="certificate-footer">
+                                <button class="btn-small" onclick="approveCertificate(2)">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="btn-small" onclick="rejectCertificate(2)">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="btn-small" onclick="viewDetails(2)">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certificate Card Template 3 -->
+                    <div class="certificate-card">
+                        <div class="certificate-preview" style="background: linear-gradient(135deg, #4caf50, #388e3c);">
+                            <i class="fas fa-award"></i>
+                            <div class="preview-text">
+                                <h4>[Course Name]</h4>
+                                <p>[Student Name]</p>
+                            </div>
+                        </div>
+                        <div class="certificate-content">
+                            <div class="certificate-header">
+                                <h3>[Certificate Title]</h3>
+                                <span class="certificate-badge">Active</span>
+                            </div>
+                            <div class="certificate-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span class="label">Student:</span>
+                                    <span class="value">[Student Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-book"></i>
+                                    <span class="label">Course:</span>
+                                    <span class="value">[Course Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span class="label">Issued:</span>
+                                    <span class="value">[Issue Date]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-trophy"></i>
+                                    <span class="label">Grade:</span>
+                                    <span class="value">[Grade]%</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span class="label">Cert #:</span>
+                                    <span class="value">[Certificate ID]</span>
+                                </div>
+                            </div>
+                            <div class="certificate-footer">
+                                <button class="btn-small" onclick="viewCertificate(3)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn-small" onclick="downloadCertificate(3)">
+                                    <i class="fas fa-download"></i> PDF
+                                </button>
+                                <button class="btn-small" onclick="printCertificate(3)">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certificate Card Template 4 (Expired) -->
+                    <div class="certificate-card">
+                        <div class="certificate-preview" style="background: linear-gradient(135deg, #9e9e9e, #757575);">
+                            <i class="fas fa-times-circle"></i>
+                            <div class="preview-text">
+                                <h4>[Course Name]</h4>
+                                <p>[Student Name]</p>
+                            </div>
+                        </div>
+                        <div class="certificate-content">
+                            <div class="certificate-header">
+                                <h3>[Certificate Title]</h3>
+                                <span class="certificate-badge" style="background: var(--gray);">Expired</span>
+                            </div>
+                            <div class="certificate-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span class="label">Student:</span>
+                                    <span class="value">[Student Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-book"></i>
+                                    <span class="label">Course:</span>
+                                    <span class="value">[Course Name]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span class="label">Issued:</span>
+                                    <span class="value">[Issue Date]</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <span class="label">Expired:</span>
+                                    <span class="value">[Expiry Date]</span>
+                                </div>
+                            </div>
+                            <div class="certificate-footer">
+                                <button class="btn-small" onclick="renewCertificate(4)">
+                                    <i class="fas fa-redo"></i> Renew
+                                </button>
+                                <button class="btn-small" onclick="viewCertificate(4)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn-small" onclick="archiveCertificate(4)">
+                                    <i class="fas fa-archive"></i> Archive
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Certificate Modal -->
+<div id="viewCertificateModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3>Certificate Preview</h3>
+            <button class="close-modal" onclick="closeModal('viewCertificateModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="certificate-preview-modal">
+                <div class="certificate-frame">
+                    <h2>EAMU Learning Hub</h2>
+                    <h3>Certificate of Completion</h3>
+                    <div class="student-name">[Student Name]</div>
+                    <p>has successfully completed the course</p>
+                    <div class="course-name">[Course Name]</div>
+                    <p>with a grade of <strong>[Grade]%</strong></p>
+                    <div class="date">Issued on: [Issue Date] • Certificate ID: [Certificate ID]</div>
+                </div>
+                <div class="certificate-actions">
+                    <button class="btn btn-primary" onclick="downloadCertificate()">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="btn btn-secondary" onclick="printCertificate()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-secondary" onclick="emailCertificate()">
+                        <i class="fas fa-envelope"></i> Email to Student
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Generate Bulk Certificates Modal -->
+<div id="bulkGenerateModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>Bulk Generate Certificates</h3>
+            <button class="close-modal" onclick="closeModal('bulkGenerateModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="bulkGenerateForm">
+                <div class="form-group">
+                    <label>Select Course</label>
+                    <select class="form-control" required>
+                        <option value="">Choose a course</option>
+                        <option value="1">[Course Name 1]</option>
+                        <option value="2">[Course Name 2]</option>
+                        <option value="3">[Course Name 3]</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Students</label>
+                    <div class="student-checkboxes">
+                        <label class="checkbox">
+                            <input type="checkbox"> [Student Name 1]
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox"> [Student Name 2]
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox"> [Student Name 3]
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox"> [Student Name 4]
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox"> [Student Name 5]
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Issue Date</label>
+                    <input type="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Certificate Template</label>
+                    <select class="form-control" required>
+                        <option value="standard">Standard Template</option>
+                        <option value="premium">Premium Template</option>
+                        <option value="simple">Simple Template</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('bulkGenerateModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="generateCertificates()">Generate</button>
+        </div>
+    </div>
+</div>
+
+<!-- Simple JavaScript -->
+<script src="../auth_helper.js"></script>
+    <script src="a_certificates.js"></script>
+<script src="../auth_helper.js"></script>
+    <script src="a_notifications.js"></script>
+</body>
+</html>
